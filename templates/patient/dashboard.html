@@ -1,0 +1,92 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'patient/patient_navbar.html' %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                    <p><strong>Age:</strong> {{ user.patient.dob }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone:</strong> {{ patient.user.phone_number }}</p>
+                    <a href="{% url 'patient_settings' %}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <!-- Upload Eye Image for Detection -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Upload Eye Image for Detection</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="eye_image" class="form-label">Choose Eye Image</label>
+                            <input type="file" name="eye_image" class="form-control" id="eye_image" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload and Detect</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Detection Results -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Detection Results</h4>
+                </div>
+                <div class="card-body">
+                    {% if detection_results %}
+                        <ul class="list-group">
+                            {% for result in detection_results %}
+                                <li class="list-group-item">
+                                    <p><strong>Date:</strong> {{ result.date }}</p>
+                                    <p><strong>Result:</strong> {{ result.result }}</p>
+                                    <a href="{{ result.image.url }}" target="_blank">View Image</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No detection results available.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Appointments -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Upcoming Appointments</h4>
+                </div>
+                <div class="card-body">
+                    {% if appointments %}
+                        <ul class="list-group">
+                            {% for appointment in appointments %}
+                                <li class="list-group-item">
+                                    <p><strong>Date:</strong> {{ appointment.date }}</p>
+                                    <p><strong>Doctor:</strong> {{ appointment.doctor.name }}</p>
+                                    <p><strong>Status:</strong> {{ appointment.status }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming appointments.</p>
+                    {% endif %}
+                    <a href="{% url 'book_appointment' %}" class="btn btn-primary mt-3">Book Appointment</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

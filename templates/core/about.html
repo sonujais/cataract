@@ -1,0 +1,53 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'common/navbar.html' %}
+
+<!-- About Section -->
+<section class="about py-5 text-center" id="about">
+    <div class="container">
+        <h2 class="display-5 mb-5">About Us</h2>
+        <p class="lead">We are a dedicated team of professionals committed to providing advanced medical eye care. Our goal is to offer quick and accurate cataract detection services to help you maintain optimal eye health.</p>
+        <p class="lead">Our team consists of experienced professionals in front-end development, deep learning, and back-end development, working together to ensure the best experience for our users.</p>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team py-5 bg-light text-center" id="team">
+    <div class="container">
+        <h2 class="display-5 mb-5">Meet Our Team</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-5">
+                <div class="card shadow border-light text-center">
+                    <img src="{% static 'images/aashish.jpg' %}" alt="Aashish Rauniyar" class="circular-image mx-auto" />
+                    <div class="card-body">
+                        <h5 class="card-title">Aashish Rauniyar</h5>
+                        <p class="card-text">Front-end developer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow border-light text-center">
+                    <img src="{% static 'images/sushant.jpg' %}" alt="Sushant Bhandari" class="circular-image mx-auto" />
+                    <div class="card-body">
+                        <h5 class="card-title">Sushant Bhandari</h5>
+                        <p class="card-text">Deep Learning model trainer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-5">
+                <div class="card shadow border-light text-center">
+                    <img src="{% static 'images/sonu-linkedin-pp.jpeg' %}" alt="Sonu Kumar" class="circular-image mx-auto" />
+                    <div class="card-body">
+                        <h5 class="card-title">Sonu Kumar</h5>
+                        <p class="card-text">Backend developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include 'common/footer.html' %}
+{% endblock %}

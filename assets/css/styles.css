@@ -1,0 +1,152 @@
+/* General styling */
+body {
+    background-color: #f0f4f8; /* Soft, neutral background color */
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Login Form */
+.login-form {
+    width: 100%;
+    max-width: 400px; /* Set max width for login form */
+    padding: 30px;
+    background-color: #ffffff; /* Light form background for contrast */
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1); /* Soft, floating shadow */
+    opacity: 0.98;
+}
+
+/* Signup Form */
+.signup-form {
+    width: 100%;
+    max-width: 600px; /* Set max width for signup form */
+    padding: 30px;
+    background-color: #ffffff; /* Light form background for contrast */
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1); /* Soft, floating shadow */
+    opacity: 0.98;
+}
+/* Container for the password input and icon */
+.input-group {
+    position: relative;
+}
+
+/* Eye Icon Style */
+.eye-icon {
+    position: absolute;
+    right: 15px; /* Adjust based on your padding */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    color: #888; /* Optional color for the icon */
+    font-size: 18px; /* Adjust size as needed */
+    z-index: 10; /* Ensure icon stays above input text */
+}
+
+.input-group input {
+    padding-right: 50px; /* Adjust to make room for the icon */
+}
+
+
+
+/* Headings */
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333333;
+}
+
+/* Form fields */
+.form-label {
+    font-weight: 600;
+    color: #555555;
+}
+
+.form-control-lg {
+    font-size: 16px;
+    height: 45px;
+    padding: 10px;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 50%;
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: #28a745; /* Green button color */
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="submit"]:focus {
+    background-color: #218838; /* Slightly darker green on hover */
+    outline: none;
+}
+
+/* Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Alert messages */
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #17a2b8;
+    border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-form, .signup-form {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    h2 {
+        font-size: 24px;
+    }
+
+    .form-check-label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+    }
+}

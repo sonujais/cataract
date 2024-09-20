@@ -1,0 +1,109 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'patient/patient_navbar.html' %}
+<div class="container my-4">
+    <h1 class="mb-4">Settings</h1>
+    
+    <!-- Update Name Form -->
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-primary shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-3">Update Name</h2>
+                    <form method="post" action="{% url 'update_name' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Name</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Username Form -->
+    <div class="row mt-4">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-primary shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-3">Update Username</h2>
+                    <form method="post" action="{% url 'update_username' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="new_username" class="form-label">New Username</label>
+                            <input type="text" class="form-control" id="new_username" name="new_username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_username" class="form-label">Confirm Username</label>
+                            <input type="text" class="form-control" id="confirm_username" name="confirm_username" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Username</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Password Form -->
+    <div class="row mt-4">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-primary shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-3">Update Password</h2>
+                    <form method="post" action="{% url 'update_password' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Email Form -->
+    <div class="row mt-4">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-primary shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-3">Update Email</h2>
+                    <form method="post" action="{% url 'update_email' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="current_email" class="form-label">Current Email</label>
+                            <input type="email" class="form-control" id="current_email" name="current_email" value="{{ user.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_email" class="form-label">New Email</label>
+                            <input type="email" class="form-control" id="new_email" name="new_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_email" class="form-label">Confirm New Email</label>
+                            <input type="email" class="form-control" id="confirm_email" name="confirm_email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Email</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'common/footer.html' %}
+{% endblock %}

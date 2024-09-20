@@ -1,0 +1,345 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8; /* Soft, neutral background color */
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+a {
+    text-decoration: none; /* Remove underline for links */
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: none; /* Ensure no underline on hover */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    height: 75px; /* Ensure consistent height */
+}
+
+.navbar-brand img {
+    height: 70px; /* Set logo height */
+    width: 70px; /* Maintain aspect ratio */
+}
+
+.navbar-nav .nav-link {
+    color: #333;
+    font-weight: bold;
+    margin-right: 20px;
+    padding: 10px 0;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    border-bottom: 2px solid #007bff;
+}
+
+/* Hero Section */
+.hero {
+    background: url('images/banner.jpg') no-repeat center center/cover;
+    height: 600px;
+    color: #fff;
+    position: relative;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.hero .btn {
+    font-size: 1.25rem;
+    padding: 10px 20px;
+    margin: 10px;
+}
+
+/* Features Section */
+.features {
+    background-color: #f8f9fa;
+}
+
+.features .card {
+    padding: 20px;
+    border-radius: 10px;
+    border: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.features .card:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-10px);
+}
+
+.features img {
+    max-width: 60px;
+    margin-bottom: 15px;
+}
+
+/* Team Section */
+.team {
+    background-color: #ffffff;
+}
+
+.team .card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.team .card:hover {
+    transform: translateY(-10px);
+}
+
+.team .card-img-top {
+    max-height: 200px;
+    object-fit: cover;
+}
+
+/* Circular Image Styling */
+.circular-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    display: block;
+}
+
+/* Adjusted Shadow Class */
+.shadow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Service Image */
+.service-image {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+/* Contact Section */
+.contact {
+    padding: 60px 0;
+    background-color: #f1f1f1;
+}
+
+.contact h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.contact p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.contact form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.contact form .form-control {
+    border: 1px solid #ced4da;
+}
+
+/* Card Shadow */
+.card-shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.map-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.form-control-lg {
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Consistent Button Styles */
+.btn-green {
+    display: inline-block;
+    width: auto !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
+    color: #ffffff !important;
+    background-color: #28a745; /* Green color */
+    border: 1px solid #28a745; /* Border color same as background */
+}
+
+.btn-green:hover {
+    color: #ffffff; /* Text color white on hover */
+    background-color: #218838; /* Darker green on hover */
+    border: 1px solid #218838; /* Border color same as background on hover */
+}
+
+/* Apply the .btn-green class to all button styles */
+.btn-primary {
+    @extend .btn-green; /* Extend or override with the same style */
+}
+
+.btn-lg {
+    @extend .btn-green; /* Extend or override with the same style */
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 0.5rem 0; /* Reduced padding */
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.875rem; /* Reduced font size */
+}
+
+/* Footer Social Icons */
+.social-icon {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.social-icon:hover {
+    color: #007bff;
+}
+
+.social-icon i {
+    vertical-align: middle;
+}
+
+/* Ensure proper alignment of icons */
+.footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1.25rem;
+    }
+
+    .features .card,
+    .team .card {
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        width: auto; /* Ensures buttons do not stretch on smaller screens */
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Login and Signup Form Styles */
+.login-container, .signup-container {
+    background-color: #f1f1f1;
+    min-height: 100vh;
+    padding-top: 5vh; /* Position form slightly higher */
+}
+
+.login-container {
+    height: calc(100vh - 80px); /* Adjust height to leave space for footer */
+    padding-bottom: 5vh; /* Ensure space between form and footer */
+}
+
+.login-form, .signup-form {
+    width: 100%;
+    padding: 2rem; /* Increase padding */
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-form h2, .signup-form h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-control::placeholder {
+    font-size: 1rem; /* Increase placeholder font size */
+}
+
+/* Button Styles within Forms */
+.btn-primary, .btn-lg {
+    display: inline-block;   /* Ensures button does not stretch to full width */
+    width: auto !important;  /* Overrides any 100% width styles */
+    border-radius: 8px;      /* Consistent button styling */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem; /* Adjust padding for larger buttons */
+    margin: 10px 0;         /* Add vertical margin */
+}

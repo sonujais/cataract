@@ -1,0 +1,56 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'common/navbar.html' %}
+
+<!-- Hero Section -->
+<section class="hero d-flex align-items-center" style="background-image: url('{% static 'images/banner.jpg' %}'); background-size: cover; background-position: center; height: 100vh;">
+    <div class="container text-center text-white">
+        <h1 class="display-3 fw-bold">Advanced Medical Eye Care</h1>
+        <p class="lead">Upload your eye image to check for cataracts. Your vision is our responsibility.</p>
+        <a href="{% url 'home' %}" class="btn btn-success btn-lg">Scan by Uploading</a>
+    </div>
+</section>
+
+<!-- Feature Services -->
+<section class="features py-5 text-center" id="services">
+    <div class="container">
+        <h2 class="display-5 mb-5">Our Featured Services</h2>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow border-light">
+                    <div class="card-body">
+                        <i class="bi bi-eye-fill display-4 mb-3 text-primary"></i>
+                        <h4 class="card-title">Cataract Detection</h4>
+                        <p class="card-text">Upload an eye image and get quick results.</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary">Upload Image</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow border-light">
+                    <div class="card-body">
+                        <i class="bi bi-chat-dots-fill display-4 mb-3 text-primary"></i>
+                        <h4 class="card-title">Talk with Chatbot</h4>
+                        <p class="card-text">Assess your risk level with our AI chatbot.</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary">Start Chatting</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow border-light">
+                    <div class="card-body">
+                        <i class="bi bi-person-lines-fill display-4 mb-3 text-primary"></i>
+                        <h4 class="card-title">Connect With Doctors</h4>
+                        <p class="card-text">Get in touch with experts for advice.</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary">Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include 'common/footer.html' %}
+{% endblock %}

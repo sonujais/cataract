@@ -1,0 +1,33 @@
+{% load static %}
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 50px">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'patient_dashboard' %}">Hi, {{ user.first_name}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'history' %}">History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'patient_settings' %}">Settings</a>
+        </li>
+        <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link nav-link">Log Out</button>
+          </form>
+          </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
