@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details</title>
+</head>
+<body>
+
+<header>
+    <h1>Appointment Details</h1>
+</header>
+
+<div class="container">
+    <p>Doctor: Dr. {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}</p>
+    <p>Patient: {{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}</p>
+    <p>Time: {{ appointment.time_slot.start_time|date:"H:i" }} - {{ appointment.time_slot.end_time|date:"H:i" }}</p>
+</div>
+
+</body>
+</html>

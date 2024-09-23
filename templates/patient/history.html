@@ -1,0 +1,56 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'patient/patient_navbar.html' %}
+<div class="container mt-4">
+    <h1 class="my-4">Uploaded Images History</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Uploaded At</th>
+                    <th>Result</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in uploaded_images %}
+                <tr>
+                    <td>
+                        <img src="{{ image.image.url }}" alt="Uploaded Eye Image" class="history-image" />
+                    </td>
+                    <td>{{ image.uploaded_at }}</td>
+                    <td>{{ image.disease_predict }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'request_recommendation' image.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-secondary">Ask doctor</button>
+                        </form>
+                        <form method="POST" action="{% url 'delete_image' image.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this image?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete Image</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No images uploaded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .history-image {
+        max-width: 150px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        max-height: 150px; /* Set a maximum height */
+    }
+</style>
+
+{% include 'common/footer.html' %}
+{% endblock %}

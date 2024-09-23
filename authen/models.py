@@ -33,3 +33,4 @@ class OTP(models.Model):
     def is_valid(self):
         # Check if OTP is valid for 10 minutes
         return timezone.now() - self.created_at <= timedelta(minutes=10)
+

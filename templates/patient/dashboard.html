@@ -1,69 +1,79 @@
 {% extends 'common/base.html' %}
 {% load static %}
-
 {% block content %}
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background */
+        font-family: Arial, sans-serif;
+    }
+
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    h4 {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+</style>
+
 {% include 'patient/patient_navbar.html' %}
 
 <div class="container mt-4">
     <div class="row">
         <!-- Profile Information -->
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     <h4>Profile Information</h4>
                 </div>
                 <div class="card-body">
                     <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                    <p><strong>Age:</strong> {{ user.patient.dob }}</p>
+                    <p><strong>Age:</strong> {{ age }}</p>
                     <p><strong>Email:</strong> {{ user.email }}</p>
-                    <p><strong>Phone:</strong> {{ patient.user.phone_number }}</p>
+                    <p><strong>Phone:</strong> {{ patientprofile.phone_number }}</p>
                     <a href="{% url 'patient_settings' %}" class="btn btn-primary">Edit Profile</a>
+                    
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-8">
+        <div class="col-md-8 mb-4">
             <!-- Upload Eye Image for Detection -->
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     <h4>Upload Eye Image for Detection</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" class="mb-4">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="eye_image" class="form-label">Choose Eye Image</label>
-                            <input type="file" name="eye_image" class="form-control" id="eye_image" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Upload and Detect</button>
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Upload Image</button>
                     </form>
-                </div>
-            </div>
-
-            <!-- Detection Results -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Detection Results</h4>
-                </div>
-                <div class="card-body">
-                    {% if detection_results %}
-                        <ul class="list-group">
-                            {% for result in detection_results %}
-                                <li class="list-group-item">
-                                    <p><strong>Date:</strong> {{ result.date }}</p>
-                                    <p><strong>Result:</strong> {{ result.result }}</p>
-                                    <a href="{{ result.image.url }}" target="_blank">View Image</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No detection results available.</p>
+                    {% if detection_result %}
+                    <div class="alert alert-info">
+                        <h2>Cataract Detection Result</h2>
+                        <p><strong>Result:</strong> {{ detection_result.disease_predict }}</p>
+                        <img src="{{ detection_result.image.url }}" alt="Uploaded Eye Image" class="result-image" />
+                    </div>
                     {% endif %}
                 </div>
             </div>
 
-            <!-- Appointments -->
+            <h2 class="my-4">Upcoming Appointments</h2>
             <div class="card mb-4">
                 <div class="card-header">
                     <h4>Upcoming Appointments</h4>
@@ -82,11 +92,15 @@
                     {% else %}
                         <p>No upcoming appointments.</p>
                     {% endif %}
-                    <a href="{% url 'book_appointment' %}" class="btn btn-primary mt-3">Book Appointment</a>
+                    <a href="{% url 'book_appointment'%}" class="btn btn-primary mt-3">Book Appointment</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
 {% include 'common/footer.html' %}
 {% endblock %}

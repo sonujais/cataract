@@ -1,0 +1,109 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background */
+        font-family: Arial, sans-serif;
+    }
+
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    h4 {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+</style>
+
+{% include 'doctor/doctor_navbar.html' %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-md-4 mb-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Profile Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ doctor.first_name }} {{ doctor.last_name }}</p>
+                    <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                    <p><strong>Email:</strong> {{ doctor.email }}</p>
+                    <p><strong>Phone:</strong> {{ doctor.phone_number }}</p>
+                    <a href="#" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-8 mb-4">
+            <!-- Notifications for Patient Requests -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Patient Requests & Notifications</h4>
+                </div>
+                <div class="card-body">
+                    {% if notifications %}
+                    <ul class="list-group">
+                        {% for notification in notifications %}
+                            <li class="list-group-item">
+                                <p><strong>Patient Name:</strong> {{ notification.patient.first_name }} {{ notification.patient.last_name }}</p>
+                                <p><strong>Message:</strong> {{ notification.message }}</p>
+                                <img src="{{ notification.image.url }}" alt="Patient Image" style="max-width: 100px; margin-bottom: 10px;">
+                                <a href="{% url 'respond_request' notification.id %}" class="btn btn-primary btn-sm">Respond</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No new notifications.</p>
+                {% endif %}
+                
+                </div>
+            </div>
+
+            <!-- Upcoming Appointments -->
+            <h2 class="my-4">Upcoming Appointments</h2>
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Appointments</h4>
+                </div>
+                <div class="card-body">
+                    {% if appointments %}
+                        <ul class="list-group">
+                            {% for appointment in appointments %}
+                                <li class="list-group-item">
+                                    <p><strong>Date:</strong> {{ appointment.date }}</p>
+                                    <p><strong>Patient:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
+                                    <p><strong>Status:</strong> {{ appointment.status }}</p>
+                                    <a href="{% url 'appointment_details' appointment.id %}" class="btn btn-secondary btn-sm">View Details</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No upcoming appointments.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+{% include 'common/footer.html' %}
+{% endblock %}

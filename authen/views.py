@@ -14,6 +14,16 @@ from django.http import HttpResponse
 from django.utils import timezone
 
 
+def profile_view(request):
+    patientprofile = PatientProfile.objects.get(user=request.user)
+    today = timezone.now().date()
+    age = today.year - patientprofile.dob.year - ((today.month, today.day) < (patientprofile.dob.month, patientprofile.dob.day))
+
+    return render(request, 'patient/profile.html', {
+        'user': request.user,
+        'patientprofile': patientprofile,
+        'age': age,
+    })
 def signup(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
@@ -90,7 +100,7 @@ def user_login(request):
             if hasattr(user, 'doctorprofile'):
                 return redirect('doctor_dashboard')  # Replace with your actual doctor dashboard URL name
             elif hasattr(user, 'patientprofile'):
-                return redirect('patient_dashboard')  # Replace with your actual patient dashboard URL name
+                return redirect('upload_image')  # Replace with your actual patient dashboard URL name
             else:
                 return redirect('home')  # Fallback to home page if no role is found
         else:

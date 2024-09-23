@@ -2,13 +2,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from authen.models import DoctorProfile
-from .models import Appointment
+from authen.models import *
+from .models import Appointment, Notification
+from django.shortcuts import render, get_object_or_404, redirect
 import random
+from api.models import ImageUpload
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 
@@ -122,10 +125,7 @@ def update_name(request):
 
     return render(request, 'settings.html')
 
-@login_required
 
-def upload_img(request):
-    return render(request, 'upload.html')
 
 @login_required
 def update_email(request):
@@ -158,11 +158,22 @@ def update_email(request):
         return redirect('settings')
     
     return render(request, 'settings.html')
+@login_required
 def doctor_dashboard(request):
-    return render(request, 'doctor/dashboard.html')
+    try:
+        doctor_profile = request.user.doctorprofile  # Access the related doctor profile
+    except DoctorProfile.DoesNotExist:
+        messages.error(request, "Doctor profile not found.")
+        return redirect('some_view_name')  # Redirect to an appropriate view
 
-def patient_dashboard(request):
-    return render(request, 'patient/dashboard.html')
+    notifications = Notification.objects.filter(doctor=doctor_profile.user).order_by('-created_at')
+    
+    return render(request, 'doctor/dashboard.html', {
+        'notifications': notifications,
+        'doctor': doctor_profile,
+    })
+
+
 
 def prediction(request):
     return render(request, 'patient/prediction.html')
@@ -174,64 +185,37 @@ def patient_settings(request):
     return render(request, 'patient/settings.html')
 
 def book_appointment(request):
-    doctors = DoctorProfile.objects.all()
-    available_slots = None
-
-    if request.method == 'POST':
-        doctor_id = request.POST.get('doctor')
-        selected_doctor = DoctorProfile.objects.get(user_id=doctor_id)
-        
-        # Fetch available slots for the selected doctor
-        available_slots = Appointment.objects.filter(doctor=selected_doctor, is_booked=False)
-        
-        if available_slots:
-            return render(request, 'patient/book_appointment.html', {
-                'doctors': doctors,
-                'available_slots': available_slots,
-            })
-        
-        # Handle the booking logic
-        # Check if slot is available, book it and redirect or show success message
-        # Example:
-        # new_appointment = Appointment.objects.create(doctor=selected_doctor, ...)
-
-    return render(request, 'patient/appointment.html', {
-        'doctors': doctors,
-        'available_slots': available_slots,
-    })
-
+    return render(request, 'patient/appointment.html')
 def see_appointments(request):
     return render(request, 'doctor/appointments.html')
 
 def doctor_settings(request):
     return render(request, 'doctor/settings.html')
 
-import random
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
+    
 
-@require_GET
-def get_available_timeslots(request):
-    date = request.GET.get('date')
-    doctor_id = request.GET.get('doctor_id')
+    
+    
 
-    # Ensure both date and doctor_id are provided
-    if date and doctor_id:
-        # Generate random time slots
-        all_possible_slots = [
-            "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM",
-            "11:00 AM", "11:30 AM", "01:00 PM", "01:30 PM",
-            "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM",
-            "04:00 PM", "04:30 PM"
-        ]
+
+def request_recommendation(request, image_id):
+    if request.method == 'POST':
+        image = get_object_or_404(ImageUpload, id=image_id)
+
+        # Get all doctors (assuming they are identified by a specific group or role)
+        doctors = DoctorProfile.objects.all()  # Adjust based on your logic for selecting doctors
+
+        # Create notifications for each doctor
+        for doctor in doctors:
+            Notification.objects.create(
+                patient=request.user.patientprofile,  # Assuming patient profile is linked
+                doctor=doctor,
+                image=image,
+                message='A new recommendation request from a patient.'
+            )
         
-        # For demo purposes, return a random selection of 5 slots
-        num_slots = 5
-        random_slots = random.sample(all_possible_slots, min(num_slots, len(all_possible_slots)))
-        
-        return JsonResponse({'time_slots': random_slots})
-    else:
-        return JsonResponse({'time_slots': []}, status=400)
+        messages.success(request, 'Recommendation request sent successfully to doctors.')
+        return redirect('history')
 
 
 # def logout_view(request):
