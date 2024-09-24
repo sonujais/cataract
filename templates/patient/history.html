@@ -12,6 +12,7 @@
                     <th>Image</th>
                     <th>Uploaded At</th>
                     <th>Result</th>
+                    <th>Doctor's Recommendation</th> <!-- New column for the recommendation -->
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,6 +24,13 @@
                     </td>
                     <td>{{ image.uploaded_at }}</td>
                     <td>{{ image.disease_predict }}</td>
+                    <td>
+                        {% if image.doctor_comment %}
+                            {{ image.doctor_comment }}
+                        {% else %}
+                            No recommendation yet.
+                        {% endif %}
+                    </td>
                     <td>
                         <form method="POST" action="{% url 'request_recommendation' image.id %}" class="d-inline">
                             {% csrf_token %}
@@ -36,7 +44,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4">No images uploaded yet.</td>
+                    <td colspan="5">No images uploaded yet.</td>
                 </tr>
                 {% endfor %}
             </tbody>

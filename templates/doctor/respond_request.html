@@ -1,0 +1,18 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'doctor/doctor_navbar.html' %}
+<div class="container mt-4">
+    <h1>Respond to Request</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="doctor_comment">Your Recommendation</label>
+            <textarea id="doctor_comment" name="doctor_comment" class="form-control" rows="5"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+</div>
+{% include 'common/footer.html' %}
+{% endblock %}
+

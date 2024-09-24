@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ImageUploadForm
-from .models import ImageUpload
+from .models import ImageUpload, RecommendationRequest
+from authen.models import DoctorProfile
 from django.core.mail import send_mail  # For sending email recommendations
 
 def upload_image(request):
@@ -36,19 +38,44 @@ def result(request, image_id):
         'detection_result': detection_result,
     })
 
+@login_required
 def request_recommendation(request, image_id):
+    image = get_object_or_404(ImageUpload, id=image_id, user=request.user)
+
+    # Assuming there is only one doctor, or you can adjust this to allow patient to select the doctor
+    try:
+        doctor = DoctorProfile.objects.first()  # You can customize this part
+        if doctor:
+            # Create the recommendation request
+            recommendation_request = RecommendationRequest.objects.create(
+                image=image,
+                patient=request.user,
+                doctor=doctor,
+                message=f"Please review this image and provide your recommendation."
+            )
+            messages.success(request, 'Request has been sent to the doctor.')
+        else:
+            messages.error(request, 'No doctor is available at the moment.')
+    except DoctorProfile.DoesNotExist:
+        messages.error(request, 'Unable to find the doctor.')
+
+    return redirect('history')
+
+@login_required
+def respond_request(request, request_id):
+    recommendation_request = get_object_or_404(RecommendationRequest, id=request_id, doctor__user=request.user)
+
     if request.method == 'POST':
-        image = get_object_or_404(ImageUpload, id=image_id)
-        # Logic to send a recommendation request, e.g., email to doctor
-        send_mail(
-            'Recommendation Request',
-            f'A recommendation has been requested for the image uploaded on {image.uploaded_at}.',
-            'from@example.com',  # Replace with your from email
-            ['doctor@example.com'],  # Replace with the doctor's email
-            fail_silently=False,
-        )
-        messages.success(request, 'Recommendation request sent successfully.')
-        return redirect('history')
+        comment = request.POST.get('doctor_comment')
+        recommendation_request.image.doctor_comment = comment
+        recommendation_request.image.save()
+        recommendation_request.is_reviewed = True
+        recommendation_request.save()
+        messages.success(request, 'Your recommendation has been sent to the patient.')
+        return redirect('doctor_dashboard')
+
+    return render(request, 'doctor/respond_request.html', {'request': recommendation_request})
+
 
 def delete_image(request, image_id):
     if request.method == 'POST':
@@ -56,6 +83,9 @@ def delete_image(request, image_id):
         image.delete()  # Delete the image
         messages.success(request, 'Image deleted successfully.')
         return redirect('history')
+    
+    
+
 
 # Dummy function for prediction
 def predict_disease(image_path):

@@ -15,15 +15,17 @@ from django.utils import timezone
 
 
 def profile_view(request):
-    patientprofile = PatientProfile.objects.get(user=request.user)
-    today = timezone.now().date()
-    age = today.year - patientprofile.dob.year - ((today.month, today.day) < (patientprofile.dob.month, patientprofile.dob.day))
-
-    return render(request, 'patient/profile.html', {
-        'user': request.user,
+    user = request.user
+    try:
+        patientprofile = PatientProfile.objects.get(user=user)
+    except PatientProfile.DoesNotExist:
+        patientprofile = None  # Handle the case where profile doesn't exist
+    context = {
+        'user': user,
         'patientprofile': patientprofile,
-        'age': age,
-    })
+    }
+    return render(request, 'patient/dashboard.html', context)
+
 def signup(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']

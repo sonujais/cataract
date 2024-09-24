@@ -8,16 +8,12 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from authen.models import *
-from .models import Appointment, Notification
+from api.models import RecommendationRequest
 from django.shortcuts import render, get_object_or_404, redirect
 import random
 from api.models import ImageUpload
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-
-@login_required
-def profile(request):
-    return render(request, 'profile.html')
 
 @login_required
 def edit_profile(request):
@@ -32,14 +28,12 @@ def edit_profile(request):
         user.last_name = last_name
         user.email = email
         user.save()
-
-        messages.success(request, 'Profile updated successfully.')
         return redirect('profile')
 
-    return render(request, 'edit_profile.html')
+    return render(request, 'common/settings.html')
 
 def settings(request):
-    return render(request, 'settings.html')
+    return render(request, 'common/settings.html')
 
 @login_required
 def update_username(request):
@@ -64,13 +58,12 @@ def update_username(request):
                 fail_silently=False,
             )
 
-            messages.success(request, "Username updated successfully")
         else:
             messages.error(request, "Usernames do not match")
         
         return redirect('settings')
     
-    return render(request, 'settings.html')
+    return render(request, 'common/settings.html')
 
 @login_required
 def update_password(request):
@@ -106,7 +99,7 @@ def update_password(request):
         
         return redirect('settings')
     
-    return render(request, 'settings.html')
+    return render(request, 'common/settings.html')
 
 
 @login_required
@@ -123,7 +116,7 @@ def update_name(request):
         messages.success(request, 'Name updated successfully.')
         return redirect('settings')
 
-    return render(request, 'settings.html')
+    return render(request, 'common/settings.html')
 
 
 
@@ -157,21 +150,18 @@ def update_email(request):
         
         return redirect('settings')
     
-    return render(request, 'settings.html')
+    return render(request, 'common/settings.html')
 @login_required
 def doctor_dashboard(request):
-    try:
-        doctor_profile = request.user.doctorprofile  # Access the related doctor profile
-    except DoctorProfile.DoesNotExist:
-        messages.error(request, "Doctor profile not found.")
-        return redirect('some_view_name')  # Redirect to an appropriate view
+    doctor_profile = get_object_or_404(DoctorProfile, user=request.user)
+    notifications = RecommendationRequest.objects.filter(doctor=doctor_profile, is_reviewed=False)
 
-    notifications = Notification.objects.filter(doctor=doctor_profile.user).order_by('-created_at')
-    
-    return render(request, 'doctor/dashboard.html', {
-        'notifications': notifications,
+    context = {
         'doctor': doctor_profile,
-    })
+        'notifications': notifications,
+    }
+
+    return render(request, 'doctor/dashboard.html', context)
 
 
 
@@ -182,7 +172,7 @@ def history(request):
     return render(request, 'patient/history.html')
 
 def patient_settings(request):
-    return render(request, 'patient/settings.html')
+    return render(request, 'common/settings.html')
 
 def book_appointment(request):
     return render(request, 'patient/appointment.html')
@@ -190,7 +180,7 @@ def see_appointments(request):
     return render(request, 'doctor/appointments.html')
 
 def doctor_settings(request):
-    return render(request, 'doctor/settings.html')
+    return render(request, 'common/settings.html')
 
     
 
@@ -198,24 +188,7 @@ def doctor_settings(request):
     
 
 
-def request_recommendation(request, image_id):
-    if request.method == 'POST':
-        image = get_object_or_404(ImageUpload, id=image_id)
 
-        # Get all doctors (assuming they are identified by a specific group or role)
-        doctors = DoctorProfile.objects.all()  # Adjust based on your logic for selecting doctors
-
-        # Create notifications for each doctor
-        for doctor in doctors:
-            Notification.objects.create(
-                patient=request.user.patientprofile,  # Assuming patient profile is linked
-                doctor=doctor,
-                image=image,
-                message='A new recommendation request from a patient.'
-            )
-        
-        messages.success(request, 'Recommendation request sent successfully to doctors.')
-        return redirect('history')
 
 
 # def logout_view(request):

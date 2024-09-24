@@ -1,106 +1,257 @@
 {% extends 'common/base.html' %}
 {% load static %}
+
 {% block content %}
-
-<style>
-    body {
-        background-color: #f8f9fa; /* Light background */
-        font-family: Arial, sans-serif;
-    }
-
-    .card {
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn {
-        border-radius: 5px;
-        transition: background-color 0.3s, transform 0.3s;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
-
-    h4 {
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
-</style>
-
 {% include 'patient/patient_navbar.html' %}
 
-<div class="container mt-4">
+<div class="container mt-5">
     <div class="row">
         <!-- Profile Information -->
         <div class="col-md-4 mb-4">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Profile Information</h4>
+            <div class="card shadow-sm" style="height: 100%; border-radius: 15px;">
+                <div class="card-header bg-primary text-white text-center" style="border-radius: 15px 15px 0 0;">
+                    <h4 class="mb-0">Profile Information</h4>
                 </div>
-                <div class="card-body">
-                    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                    <p><strong>Age:</strong> {{ age }}</p>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                    <p><strong>Phone:</strong> {{ patientprofile.phone_number }}</p>
-                    <a href="{% url 'patient_settings' %}" class="btn btn-primary">Edit Profile</a>
-                    
+                <div class="card-body text-center">
+                    <i class="fas fa-user-circle fa-5x mb-4"></i>
+                    <p class="text-muted"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="text-muted"><strong>Date of Birth:</strong> {{ patientprofile.dob }}</p>
+                    <p class="text-muted"><strong>Email:</strong> {{ user.email }}</p>
+                    <p class="text-muted"><strong>Phone:</strong> {{ patientprofile.phone_number }}</p>
+                    <a href="{% url 'settings' %}" class="btn btn-outline-primary w-100">Edit Profile</a>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Upload Eye Image for Detection -->
         <div class="col-md-8 mb-4">
-            <!-- Upload Eye Image for Detection -->
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Upload Eye Image for Detection</h4>
+            <div class="card shadow-sm" style="height: 100%; border-radius: 15px;">
+                <div class="card-header bg-primary text-white text-center" style="border-radius: 15px 15px 0 0;">
+                    <h4 class="mb-0">Upload Eye Image for Detection</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data" class="mb-4">
+                    <form method="POST" enctype="multipart/form-data" id="upload-form">
                         {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Upload Image</button>
+                        <div class="form-group">
+                            <div id="drop-zone" class="drop-zone">
+                                <p class="drop-zone-text">Drag & Drop your eye image here or click to upload</p>
+                                <input type="file" id="id_image" name="image" class="form-control-file large-file-input" />
+                                <input type="text" id="file-name-input" class="form-control mt-2" placeholder="Selected File" readonly />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4">Upload Image</button>
                     </form>
                     {% if detection_result %}
-                    <div class="alert alert-info">
-                        <h2>Cataract Detection Result</h2>
+                    <div class="alert alert-info text-center mt-4">
+                        <h5>Cataract Detection Result</h5>
                         <p><strong>Result:</strong> {{ detection_result.disease_predict }}</p>
-                        <img src="{{ detection_result.image.url }}" alt="Uploaded Eye Image" class="result-image" />
+                        <img src="{{ detection_result.image.url }}" alt="Uploaded Eye Image" class="img-fluid rounded shadow-sm mt-3">
                     </div>
                     {% endif %}
                 </div>
             </div>
-
-            <h2 class="my-4">Upcoming Appointments</h2>
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Upcoming Appointments</h4>
-                </div>
-                <div class="card-body">
-                    {% if appointments %}
-                        <ul class="list-group">
-                            {% for appointment in appointments %}
-                                <li class="list-group-item">
-                                    <p><strong>Date:</strong> {{ appointment.date }}</p>
-                                    <p><strong>Doctor:</strong> {{ appointment.doctor.name }}</p>
-                                    <p><strong>Status:</strong> {{ appointment.status }}</p>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No upcoming appointments.</p>
-                    {% endif %}
-                    <a href="{% url 'book_appointment'%}" class="btn btn-primary mt-3">Book Appointment</a>
-                </div>
-            </div>
         </div>
+    </div>
+
+    <!-- Chatbot Button -->
+    <div class="chatbot-button-container">
+        <button id="chatbot-toggle" class="btn btn-primary chatbot-button">
+            <i class="fas fa-comments"></i> Chat
+        </button>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<!-- Chatbot Modal -->
+<div id="chatbot-modal" class="chatbot-modal">
+    <div class="chatbot-header">
+        <h5>Virtual Assistant</h5>
+        <button id="close-chatbot" class="close-chatbot">&times;</button>
+    </div>
+    <div id="chatbot" class="chatbot-container">
+        <div id="chatbox" class="chatbox mb-4">
+            <div id="chat-messages" class="chat-messages"></div>
+        </div>
+        <form id="chatbot-form" class="chatbot-form d-flex">
+            <input type="text" id="chat-input" class="form-control me-2" placeholder="Type a message..." autocomplete="off" />
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
 
+<!-- Custom CSS for Upload Area and Chatbot -->
+<style>
+    /* Drag and Drop Upload Area */
+    .drop-zone {
+        border: 2px dashed #007bff;
+        border-radius: 10px;
+        padding: 50px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        background-color: #f8f9fa;
+        width: 100%;
+    }
+
+    .drop-zone:hover {
+        background-color: #e9ecef;
+        border-color: #0056b3;
+    }
+
+    .drop-zone-text {
+        font-size: 18px;
+        color: #6c757d;
+    }
+
+    /* Hide default file input */
+    #id_image {
+        display: none;
+    }
+
+    /* Chatbot button styling */
+    .chatbot-button-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .chatbot-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 15px 20px;
+        font-size: 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .chatbot-button:hover {
+        background-color: #0056b3;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Chatbot Modal */
+    .chatbot-modal {
+        display: none;
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 320px;
+        max-height: 550px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .chatbot-header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .close-chatbot {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+    }
+
+    .chatbox {
+        border: none;
+        padding: 10px;
+        height: 350px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+    }
+
+    .chat-messages {
+        margin-bottom: 10px;
+    }
+
+    .chat-message {
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 10px;
+    }
+
+    .user-message {
+        background-color: #007bff;
+        color: white;
+        text-align: right;
+    }
+
+    .bot-message {
+        background-color: #f1f1f1;
+        color: black;
+    }
+
+    .chatbot-form {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+
+    .btn {
+        border-radius: 10px;
+    }
+</style>
+
+<!-- Chatbot and Drag-and-Drop Script -->
+<script>
+    // Chatbot functionality (simulated response)
+    document.getElementById('chatbot-toggle').addEventListener('click', function () {
+        var modal = document.getElementById('chatbot-modal');
+        modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('close-chatbot').addEventListener('click', function () {
+        document.getElementById('chatbot-modal').style.display = 'none';
+    });
+
+    document.getElementById('chatbot-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var userMessage = document.getElementById('chat-input').value;
+        var chatMessages = document.getElementById('chat-messages');
+        
+        var userMessageDiv = document.createElement('div');
+        userMessageDiv.classList.add('chat-message', 'user-message');
+        userMessageDiv.textContent = userMessage;
+        
+        chatMessages.appendChild(userMessageDiv);
+
+        // Simulate bot response
+        var botMessageDiv = document.createElement('div');
+        botMessageDiv.classList.add('chat-message', 'bot-message');
+        botMessageDiv.textContent = 'Hello! How can I help you?';
+        
+        chatMessages.appendChild(botMessageDiv);
+
+        document.getElementById('chat-input').value = '';
+    });
+
+    // File upload script
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('id_image');
+    const fileNameInput = document.getElementById('file-name-input');
+
+    dropZone.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function () {
+        fileNameInput.value = fileInput.files[0].name;
+    });
+</script>
 {% include 'common/footer.html' %}
 {% endblock %}

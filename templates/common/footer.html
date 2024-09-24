@@ -1,16 +1,51 @@
-<footer class="py-4 bg-dark text-white text-center">
-    <div class="container">
-        <p class="mb-0">&copy; 2023 NAYAN.AI. All Rights Reserved.</p>
-        <ul class="list-inline mt-3">
-            <li class="list-inline-item">
-                <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
-            </li>
-            <li class="list-inline-item">
-                <a href="#" class="text-white"><i class="bi bi-twitter"></i></a>
-            </li>
-            <li class="list-inline-item">
-                <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
-            </li>
-        </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="path/to/bootstrap.min.css">
+    <link rel="stylesheet" href="path/to/fontawesome.min.css">
+    <link rel="stylesheet" href="path/to/bootstrap-icons.css">
+    <title>Your Website Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex: 1; /* This allows the content area to grow and fill available space */
+        }
+        footer {
+            /* Optional: any specific styles for the footer */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <!-- Your page content goes here -->
+        {% block content %}
+        {% endblock %}
     </div>
-</footer>
+
+    <footer class="py-4 bg-dark text-white text-center">
+        <div class="container">
+            <p class="mb-0">&copy; 2023 NAYAN.AI. All Rights Reserved.</p>
+            <ul class="list-inline mt-3">
+                <li class="list-inline-item">
+                    <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="#" class="text-white"><i class="bi bi-twitter"></i></a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>

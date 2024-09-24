@@ -9,8 +9,9 @@
     }
 
     .card {
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 12px; /* More rounded corners */
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); /* Deeper shadow for a floating effect */
+        margin-bottom: 20px; /* Space between cards */
     }
 
     .btn {
@@ -18,14 +19,42 @@
         transition: background-color 0.3s, transform 0.3s;
     }
 
-    .btn:hover {
-        background-color: #0056b3;
+    .btn-primary {
+        background-color: #007bff; /* Primary color */
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker shade on hover */
         transform: scale(1.05);
     }
 
     h4 {
         font-size: 1.5rem;
         font-weight: 600;
+        color: #333; /* Darker text for better readability */
+    }
+
+    .card-header {
+        background-color: #007bff; /* Consistent header color */
+        border-top-left-radius: 12px; /* Round corners for header */
+        border-top-right-radius: 12px;
+    }
+
+    .list-group-item {
+        border: none; /* Remove borders */
+        padding: 15px; /* Better padding */
+        background-color: #fdfdfd; /* Slightly off-white for contrast */
+    }
+
+    .list-group-item img {
+        border-radius: 50%; /* Circle images for better presentation */
+        margin-right: 10px; /* Space between image and text */
+    }
+
+    .notification-message {
+        margin-bottom: 10px; /* Space below messages */
+        color: #555; /* Darker text for messages */
     }
 </style>
 
@@ -35,8 +64,8 @@
     <div class="row">
         <!-- Profile Information -->
         <div class="col-md-4 mb-4">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+            <div class="card">
+                <div class="card-header text-white">
                     <h4>Profile Information</h4>
                 </div>
                 <div class="card-body">
@@ -49,52 +78,27 @@
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="col-md-8 mb-4">
-            <!-- Notifications for Patient Requests -->
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
+            <div class="card">
+                <div class="card-header text-white">
                     <h4>Patient Requests & Notifications</h4>
                 </div>
                 <div class="card-body">
                     {% if notifications %}
                     <ul class="list-group">
                         {% for notification in notifications %}
-                            <li class="list-group-item">
-                                <p><strong>Patient Name:</strong> {{ notification.patient.first_name }} {{ notification.patient.last_name }}</p>
-                                <p><strong>Message:</strong> {{ notification.message }}</p>
-                                <img src="{{ notification.image.url }}" alt="Patient Image" style="max-width: 100px; margin-bottom: 10px;">
-                                <a href="{% url 'respond_request' notification.id %}" class="btn btn-primary btn-sm">Respond</a>
+                            <li class="list-group-item d-flex align-items-center">
+                                <img src="{{ notification.image.image.url }}" alt="Patient Image" style="max-width: 50px;">
+                                <div>
+                                    <p class="notification-message"><strong>Patient Name:</strong> {{ notification.patient.first_name }} {{ notification.patient.last_name }}</p>
+                                    <p><strong>Message:</strong> {{ notification.message }}</p>
+                                    <a href="{% url 'respond_request' notification.id %}" class="btn btn-primary btn-sm">Respond</a>
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>
-                {% else %}
-                    <p>No new notifications.</p>
-                {% endif %}
-                
-                </div>
-            </div>
-
-            <!-- Upcoming Appointments -->
-            <h2 class="my-4">Upcoming Appointments</h2>
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Appointments</h4>
-                </div>
-                <div class="card-body">
-                    {% if appointments %}
-                        <ul class="list-group">
-                            {% for appointment in appointments %}
-                                <li class="list-group-item">
-                                    <p><strong>Date:</strong> {{ appointment.date }}</p>
-                                    <p><strong>Patient:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
-                                    <p><strong>Status:</strong> {{ appointment.status }}</p>
-                                    <a href="{% url 'appointment_details' appointment.id %}" class="btn btn-secondary btn-sm">View Details</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
                     {% else %}
-                        <p>No upcoming appointments.</p>
+                    <p>No new notifications.</p>
                     {% endif %}
                 </div>
             </div>
