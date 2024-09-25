@@ -92,6 +92,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nayanai.innovate@gmail.com'
 EMAIL_HOST_PASSWORD = 'myhh qnwn btdy ikch'
 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

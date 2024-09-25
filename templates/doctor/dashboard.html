@@ -48,13 +48,21 @@
     }
 
     .list-group-item img {
-        border-radius: 50%; /* Circle images for better presentation */
-        margin-right: 10px; /* Space between image and text */
+        border-radius: 0; /* Remove rounded corners for square image */
+        margin-right: 15px; /* Space between image and text */
+        width: 100px; /* Set a consistent width */
+        height: 100px; /* Set a consistent height */
+        object-fit: cover; /* Ensure the image covers the area without distortion */
     }
 
     .notification-message {
-        margin-bottom: 10px; /* Space below messages */
+        margin-bottom: 5px; /* Space below messages */
         color: #555; /* Darker text for messages */
+    }
+
+    .notification-prediction {
+        color: #007bff; /* Highlight the prediction result */
+        font-weight: bold;
     }
 </style>
 
@@ -88,9 +96,10 @@
                     <ul class="list-group">
                         {% for notification in notifications %}
                             <li class="list-group-item d-flex align-items-center">
-                                <img src="{{ notification.image.image.url }}" alt="Patient Image" style="max-width: 50px;">
+                                <img src="{{ notification.image.image.url }}" alt="Patient Image" class="img-fluid">
                                 <div>
                                     <p class="notification-message"><strong>Patient Name:</strong> {{ notification.patient.first_name }} {{ notification.patient.last_name }}</p>
+                                    <p class="notification-prediction"><strong>Prediction Result:</strong> {{ notification.image.disease_predict }}</p> <!-- Show the prediction result -->
                                     <p><strong>Message:</strong> {{ notification.message }}</p>
                                     <a href="{% url 'respond_request' notification.id %}" class="btn btn-primary btn-sm">Respond</a>
                                 </div>

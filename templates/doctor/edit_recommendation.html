@@ -1,0 +1,16 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'doctor/doctor_navbar.html' %}
+<div class="container mt-4">
+    <h1>Edit Recommendation</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="comments" rows="4">{{ recommendation.comments }}</textarea>
+        <button type="submit">Update Recommendation</button>
+    </form>
+</div>
+
+{% include 'common/footer.html' %}
+{% endblock %}

@@ -6,7 +6,9 @@ from django.core.mail import send_mail
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from .models import DoctorProfile, PatientProfile, OTP
-from .forms import DoctorSignupForm, PatientSignupForm
+from .forms import DoctorSignupForm, PatientSignupForm, ContactForm
+from django.conf import settings
+from django.contrib import messages
 import random
 import string
 from datetime import timedelta
@@ -236,10 +238,30 @@ def home(request):
 def about(request):
     return render(request, 'core/about.html')
 
-def contact(request):
+
+
+def contact_view(request):
     if request.method == 'POST':
-        # Handle form submission here
-        # For example, send an email or save the contact message to the database
-        return HttpResponse('Thank you for your message!')
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Get form data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            
+            # Send email
+            subject = f"Contact Form Submission from {name}"
+            email_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+            recipient_email = "nayanai.innovate@gmail.com"  # Your email
+            
+            try:
+                send_mail(subject, email_message, settings.DEFAULT_FROM_EMAIL, [recipient_email])
+                messages.success(request, "Your message has been sent successfully!")
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
+            
+            return redirect('contact')  # Redirect to the contact page after submission
+    else:
+        form = ContactForm()
     
-    return render(request, 'core/contact.html')
+    return render(request, 'core/contact.html', {'form': form})
